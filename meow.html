@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ULO Cafe</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #4E291F;
+            --cream: #F9E2C3;
+            --gold: #F2BF42;
+            --text-light: #ffffff;
+            --dark-gallery: #0a0a0a;
+            --transition-speed: 0.6s;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+        
+  /* --- Default Cream Paw Cursor --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+            cursor: url('https://img.icons8.com/m_outlined/32/F9E2C3/cat-footprint.png'), auto;
+        }
+
+        /* --- Yellow Paw Cursor (Triggers on photos and interactives) --- */
+        img, .photo-item, .drink-card, a, button, input, textarea, .image-box {
+            cursor: url('https://img.icons8.com/m_rounded/32/F2BF42/cat-footprint.png'), pointer !important;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-light);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            transition: background-color 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            
+        }        /* --- Scalloped Bubbly Awning --- */
+        .awning {
+            width: 100%;
+            height: 70px;
+            background: repeating-linear-gradient(
+                90deg,
+                var(--cream) 0px,
+                var(--cream) 60px,
+                var(--gold) 60px,
+                var(--gold) 120px
+            );
+            position: relative;
+            z-index: 10;
+        }
+
+        .awning::after {
+            content: "";
+            position: absolute;
+            bottom: -30px;
+            left: 0;
+            width: 100%;
+            height: 40px;
+            /* Creates the rounded bubbly circles at the end of each block */
+            background-image: 
+                radial-gradient(circle at 30px 0px, var(--cream) 30px, transparent 31px),
+                radial-gradient(circle at 90px 0px, var(--gold) 30px, transparent 31px);
+            background-size: 120px 40px;
+            background-repeat: repeat-x;
+        }
+        
+        
+
+        header {
+            text-align: center;
+            padding: 60px 20px 20px;
+        }
+
+        .title-logo {
+            max-width: 350px;
+            height: auto;
+            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.2));
+            animation: float 4s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background: rgba(78, 41, 31, 0.85);
+            backdrop-filter: blur(12px);
+            z-index: 1000;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(249, 226, 195, 0.1);
+        }
+
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            gap: 40px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--cream);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+            transition: 0.3s;
+        }
+
+        nav a:hover { color: var(--gold); }
+
+        section {
+            min-height: 100vh;
+            padding: 100px 12%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        
+        /* --- Drinks Carousel --- */
+        #drinks { text-align: center; }
+
+        .carousel-container {
+            position: relative;
+            height: 550px;
+            perspective: 1200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .drink-card {
+            position: absolute;
+            width: 320px;
+            height: 450px;
+            border-radius: 30px;
+            overflow: hidden;
+            transition: all var(--transition-speed) cubic-bezier(0.25, 1, 0.5, 1);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+        }
+
+        .drink-card img { width: 100%; height: 100%; object-fit: cover; }
+
+        .drink-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.9));
+            padding: 30px 20px;
+            transform: translateY(100%);
+            transition: transform 0.5s ease;
+        }
+
+        .drink-card.active .drink-info { transform: translateY(0); }
+
+        .drink-card.prev { transform: translateX(-300px) scale(0.8) rotateY(25deg); filter: blur(6px); z-index: 1; opacity: 0.5; }
+        .drink-card.active { transform: translateX(0) scale(1.1); z-index: 10; opacity: 1; }
+        .drink-card.next { transform: translateX(300px) scale(0.8) rotateY(-25deg); filter: blur(6px); z-index: 1; opacity: 0.5; }
+        .drink-card.hidden { display: none; }
+
+        /* --- Layout --- */
+        .flex-row {
+            display: flex;
+            align-items: center;
+            gap: 60px;
+            margin-bottom: 120px;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 1s ease;
+        }
+
+        .flex-row.visible { opacity: 1; transform: translateY(0); }
+
+        .image-box { flex: 1; border-radius: 30px; overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.3); }
+        .image-box img { width: 100%; display: block; transition: transform 0.5s; }
+        .image-box:hover img { transform: scale(1.05); }
+
+        .text-box { flex: 1.2; }
+        .text-box h2 { font-family: 'Playfair Display', serif; font-size: 3rem; color: var(--gold); margin-bottom: 20px; }
+        .text-box p { line-height: 1.8; color: #f0f0f0; font-size: 1.1rem; }
+
+        .controls { margin-top: 30px; display: flex; justify-content: center; gap: 20px; }
+        .btn { background: var(--gold); border: none; padding: 12px 35px; border-radius: 50px; cursor: pointer; font-weight: bold; color: #4E291F; transition: 0.3s; }
+        .btn:hover { background: var(--cream); transform: scale(1.05); }
+        
+         /* --- Contact --- */
+        .contact-container { background: rgba(249,226,195,0.05); padding: 50px; border-radius: 40px; text-align: center; border: 1px dashed var(--gold); }
+        input, textarea { width: 100%; margin: 10px 0; padding: 15px; border-radius: 10px; border: none; background: var(--cream); }
+
+
+    </style>
+</head>
+<body>
+
+    <div class="awning"></div>
+
+    <header id="home">
+        <img src="Untitled_Artwork 8.PNG" alt="ULO Cafe Logo" class="title-logo">
+    </header>
+
+    <nav>
+    <ul>
+        <li><a href="#drinks">Drinks</a></li>
+        <li><a href="#ingredients">Ingredients</a></li>
+        <li><a href="Gallery.html">Photography</a></li> 
+        <li><a href="#about">About Me</a></li>
+    </ul>
+</nav>
+
+    <section id="drinks">
+        <h2 style="margin-bottom: 40px; font-family: 'Playfair Display'; font-size: 2rem; color: var(--cream);"> Menu Items ₍^.  ̫.^₎</h2>
+        <div class="carousel-container" id="carousel">
+            <div class="drink-card" data-color="#5D4037"><img src="734FB8AA-D435-4D3C-A779-EF3425030437.JPG"><div class="drink-info"><h3>Signature Matcha Latte</h3><p>Smooth, rich, and velvety.</p></div></div>
+            <div class="drink-card" data-color="#2c4d44"><img src="IMG_1687.heic"><div class="drink-info"><h3>Hojicha Creme Brulee</h3><p>Rich hojicha with crispy sugar top.</p></div></div>
+            <div class="drink-card" data-color="#8c3232"><img src="777E26F1-9577-44F8-8274-29881983D97F.JPG"><div class="drink-info"><h3>Blueberry Hojicha</h3><p>Homemade berry syrup with our rich hojicha.</p></div></div>
+            <div class="drink-card" data-color="#3b3b4f"><img src="IMG_1597.heic"><div class="drink-info"><h3>Blueberry Matcha</h3><p>Homemade berry syrup with our rich hojicha.</p></div></div>
+            <div class="drink-card" data-color="#a67c52"><img src="IMG_1725 copy.heic"><div class="drink-info"><h3>Double Matcha</h3><p>Sweet matcha top, with our matcha latte.</p></div></div>
+            <div class="drink-card" data-color="#4E291F"><img src="https://picsum.photos/id/102/400/600"><div class="drink-info"><h3>Dark Mocha</h3><p>Rich cocoa and espresso.</p></div></div>
+            <div class="drink-card" data-color="#556B2F"><img src="https://picsum.photos/id/163/400/600"><div class="drink-info"><h3>Pistachio Milk</h3><p>Creamy, nutty, and green.</p></div></div>
+            <div class="drink-card" data-color="#704214"><img src="https://picsum.photos/id/225/400/600"><div class="drink-info"><h3>Thai Tea</h3><p>Spiced and sweetened milk tea.</p></div></div>
+            <div class="drink-card" data-color="#2F4F4F"><img src="https://picsum.photos/id/312/400/600"><div class="drink-info"><h3>Forest Matcha</h3><p>Matcha with a hint of mint.</p></div></div>
+            <div class="drink-card" data-color="#8B4513"><img src="https://picsum.photos/id/431/400/600"><div class="drink-info"><h3>Affogato</h3><p>Espresso meets vanilla.</p></div></div>
+        </div>
+        <div class="controls">
+            <button class="btn" onclick="rotateCarousel(-1)">PREVIOUS</button>
+            <button class="btn" onclick="rotateCarousel(1)">NEXT</button>
+        </div>
+    </section>
+
+    <section id="ingredients">
+        <div class="flex-row">
+            <div class="image-box"><img src="Blueberries-and-Strawberries-from-Garden.jpg"></div>
+            <div class="text-box">
+                <h2>The Berry Syrup</h2>
+                <p>Our <strong>strawberry and blueberry syrups</strong> are 100% homemade. We jar real fruit with organic cane sugar to capture that bright, jammy flavor you can't find in a bottle.</p>
+            </div>
+        </div>
+
+        <div class="flex-row" style="flex-direction: row-reverse;">
+            <div class="image-box"><img src="https://images.unsplash.com/photo-1515823064-d6e0c04616a7?auto=format&fit=crop&w=800&q=80"></div>
+            <div class="text-box">
+                <h2>Matcha Origins</h2>
+                <p>We source <strong>authentic ceremonial Matcha</strong> directly from Japan, providing a deep umami sweetness and a vibrant emerald glow.</p>
+            </div>
+        </div>
+
+        <div class="flex-row">
+            <div class="image-box"><img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=800&q=80"></div>
+            <div class="text-box">
+                <h2>Craft Milk Bases</h2>
+                <p>Whether you choose dairy or our oat blend, we prioritize texture. Every pour is micro-foamed to a silky finish, ensuring your drink is delicous.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="latest" style="text-align: center;">
+        <div class="flex-row" style="flex-direction: column;">
+            <div class="text-box"><h2>Banana Pudding Matcha</h2></div>
+            <div class="image-box" style="max-width: 650px;"><img src="https://images.unsplash.com/photo-1572442388796-11668a67e53d?auto=format&fit=crop&w=800&q=80"></div>
+            <div class="text-box"><p>Our latest seasonal drop. Banana Matcha meets local Banana Pudding and milk with our signature Matcha. A smooth, dreamy motion of flavor.</p></div>
+        </div>
+    </section>
+
+    <section id="about">
+        <div class="flex-row">
+            <div class="text-box">
+                <h2>About Me /ᐠ ¬`‸´¬ マ</h2>
+                <p>ULO Cafe was born from a love of slow mornings and home ambition. I started this business to share the recipes I perfected in my own kitchen—where every syrup is stirred by hand and every ingredient is selected with care.</p>
+            </div>
+            <div class="image-box"><img src="IMG_0689.JPG"></div>
+        </div>
+    </section>
+
+   <section id="contact">
+        <div class="contact-container">
+            <h2 style="font-family: 'Playfair Display'; color: var(--gold); font-size: 2.5rem;">Message Us!! /ᐠ > ˕ <マ ₊˚⊹♡ </h2>
+            <p style="color: var(--cream); margin-top: 10px;">Have a question or a favorite drink request? Meow at us!</p>
+            <form>
+                <input type="text" placeholder="Your Name" required>
+                <input type="email" placeholder="Your Email" required>
+                <textarea placeholder="Your message..." required></textarea>
+                <button type="submit" class="btn">Send Meow</button>
+            </form>
+        </div>
+    </section>
+    
+
+    
+  
+
+
+    <script>
+        let currentIndex = 0;
+        const cards = document.querySelectorAll('.drink-card');
+        const body = document.body;
+        let isDrinksVisible = false;
+
+        function updateCarousel() {
+            cards.forEach((card, index) => {
+                card.classList.remove('active', 'prev', 'next', 'hidden');
+                if (index === currentIndex) {
+                    card.classList.add('active');
+                    if (isDrinksVisible) {
+                        body.style.backgroundColor = card.getAttribute('data-color');
+                    }
+                } else if (index === (currentIndex - 1 + cards.length) % cards.length) {
+                    card.classList.add('prev');
+                } else if (index === (currentIndex + 1) % cards.length) {
+                    card.classList.add('next');
+                } else { card.classList.add('hidden'); }
+            });
+        }
+
+        function rotateCarousel(direction) {
+            currentIndex = (currentIndex + direction + cards.length) % cards.length;
+            updateCarousel();
+        }
+
+        // --- Smart Scroll & Background Logic ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    
+                    // Specific logic for Drinks Section background
+                    if (entry.target.id === 'drinks') {
+                        isDrinksVisible = true;
+                        const activeColor = cards[currentIndex].getAttribute('data-color');
+                        body.style.backgroundColor = activeColor;
+                    }
+                } else {
+                    // Reset to brown when drinks section is gone
+                    if (entry.target.id === 'drinks') {
+                        isDrinksVisible = false;
+                        body.style.backgroundColor = '#4E291F';
+                    }
+                }
+            });
+        }, { threshold: 0.4 });
+
+        document.querySelectorAll('section, .flex-row').forEach(el => observer.observe(el));
+
+        updateCarousel();
+    </script>
+</body>
+</html>

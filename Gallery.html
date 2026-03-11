@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photography | ULO Cafe</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0a0a0a; /* Darker background for professional gallery */
+            --cafe-brown: #4E291F;
+            --cream: #F9E2C3;
+            --gold: #F2BF42;
+            --text-light: #ffffff;
+        }
+
+        /* --- Custom Cursors (Matching your Main Page) --- */
+        * {
+            margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth;
+            cursor: url('https://img.icons8.com/m_outlined/32/F9E2C3/cat-footprint.png'), auto;
+        }
+
+        img, a, button, .photo-slot {
+            cursor: url('https://img.icons8.com/m_rounded/32/F2BF42/cat-footprint.png'), pointer !important;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-light);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* --- Subtle Pawprint Background --- */
+        body::before {
+            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url('https://img.icons8.com/m_outlined/50/ffffff/cat-footprint.png');
+            background-size: 200px; opacity: 0.03; pointer-events: none; z-index: 0;
+        }
+
+        /* --- Scalloped Awning --- */
+        .awning {
+            width: 100%; height: 70px;
+            background: repeating-linear-gradient(90deg, var(--cream) 0px, var(--cream) 60px, var(--gold) 60px, var(--gold) 120px);
+            position: relative; z-index: 10;
+        }
+        .awning::after {
+            content: ""; position: absolute; bottom: -30px; left: 0; width: 100%; height: 40px;
+            background-image: radial-gradient(circle at 30px 0px, var(--cream) 30px, transparent 31px),
+                              radial-gradient(circle at 90px 0px, var(--gold) 30px, transparent 31px);
+            background-size: 120px 40px; background-repeat: repeat-x;
+        }
+
+        nav {
+            position: sticky; top: 0; background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(12px); z-index: 1000; padding: 20px 0;
+            border-bottom: 1px solid rgba(249, 226, 195, 0.1);
+        }
+        nav ul { display: flex; justify-content: center; list-style: none; gap: 40px; }
+        nav a {
+            text-decoration: none; color: var(--cream); font-weight: 600;
+            text-transform: uppercase; font-size: 0.8rem; letter-spacing: 2px; transition: 0.3s;
+        }
+        nav a:hover { color: var(--gold); }
+
+        header { text-align: center; padding: 100px 20px 60px; position: relative; z-index: 2; }
+        header h1 { font-family: 'Playfair Display', serif; font-size: 4rem; color: #fff; line-height: 1; }
+        header p { color: var(--gold); text-transform: uppercase; letter-spacing: 5px; font-size: 0.8rem; margin-top: 15px; }
+
+        /* --- Professional Masonry Grid --- */
+        .gallery-container {
+            max-width: 1400px; margin: 0 auto; padding: 0 5% 100px;
+            column-count: 4; column-gap: 20px;
+        }
+
+        .photo-slot {
+            position: relative; display: inline-block; width: 100%;
+            margin-bottom: 20px; border-radius: 8px; overflow: hidden;
+            background: #111; opacity: 0; transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        .photo-slot.visible { opacity: 1; transform: translateY(0); }
+
+       .photo-slot img {
+    width: 100%;           /* Forces the image to fill the column width */
+    height: auto;          /* Important! This stops the image from stretching */
+    display: block;        /* Removes weird gaps at the bottom of images */
+    object-fit: cover;     /* Professional crop if the container has a set height */
+    filter: grayscale(40%) brightness(0.8);
+    transition: 0.6s ease;
+}
+        /* Hover Effect: Color comes in, image scales slightly */
+        .photo-slot:hover img {
+            filter: grayscale(0%) brightness(1);
+            transform: scale(1.05);
+        }
+
+        .overlay {
+            position: absolute; bottom: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 50%);
+            display: flex; flex-direction: column; justify-content: flex-end;
+            padding: 20px; opacity: 0; transition: 0.4s;
+        }
+
+        .photo-slot:hover .overlay { opacity: 1; }
+        .overlay span { color: var(--gold); font-size: 0.7rem; letter-spacing: 1px; }
+        .overlay h3 { font-family: 'Playfair Display'; font-size: 1.1rem; }
+
+        /* Responsive Columns */
+        @media (max-width: 1100px) { .gallery-container { column-count: 3; } }
+        @media (max-width: 800px) { .gallery-container { column-count: 2; } }
+        @media (max-width: 500px) { .gallery-container { column-count: 1; } }
+
+    </style>
+</head>
+<body>
+
+    <div class="awning"></div>
+
+    <nav>
+        <ul>
+            <li><a href="meow.html">← Back to Cafe</a></li>
+            <li><a href="index.html#drinks">Menu</a></li>
+            <li><a href="index.html#about">About</a></li>
+        </ul>
+    </nav>
+
+    <header>
+        <p>A Personal Collection</p>
+        <h1>The Nocturnal Lens</h1>
+    </header>
+
+    <div class="gallery-container">
+        <div class="photo-slot"><img src="IMG_0731.JPG"><div class="overlay"><span>01</span><h3>Ethereal Forest</h3></div></div>
+        <div class="photo-slot"><img src="_MG_7353.JPG"><div class="overlay"><span>02</span><h3>Urban Calm</h3></div></div>
+        <div class="photo-slot"><img src="IMG_3409.JPG"><div class="overlay"><span>03</span><h3>Human Shadows</h3></div></div>
+        <div class="photo-slot"><img src="https://picsum.photos/id/40/400/400"><div class="overlay"><span>04</span><h3>The Drift</h3></div></div>
+        <div class="photo-slot"><img src="https://picsum.photos/id/50/400/600"><div class="overlay"><span>05</span><h3>Silent Peaks</h3></div></div>
+        <div class="photo-slot"><img src="https://picsum.photos/id/60/400/350"><div class="overlay"><span>06</span><h3>Neon Pulse</h3></div></div>
+        <div class="photo-slot"><img src="https://picsum.photos/id/70/400/550"><div class="overlay"><span>07</span><h3>Morning Mist</h3></div></div>
+        <div class="photo-slot"><img src="https://picsum.photos/id/80/400/400"><div class="overlay"><span>08</span><h3>Concrete Jungle</h3></div></div>
+        <div class="photo-slot"><img src="IMG_0719.JPG"><div class="overlay"><span>09</span><h3>The Void</h3></div></div>
+        <div class="photo-slot"><img src="lurr.JPG"><div class="overlay"><span>10</span><h3>Wild Bloom</h3></div></div>
+        <div class="photo-slot"><img src="IMG_0657.png"><div class="overlay"><span>11</span><h3>Golden Hour</h3></div></div>
+        <div class="photo-slot"><img src="https://picsum.photos/id/121/400/300"><div class="overlay"><span>12</span><h3>Architecture</h3></div></div>
+        <div class="photo-slot"><img src="https://picsum.photos/id/131/400/500"><div class="overlay"><span>13</span><h3>Soft Grain</h3></div></div>
+        <div class="photo-slot"><img src="https://picsum.photos/id/141/400/400"><div class="overlay"><span>14</span><h3>Midnight Oil</h3></div></div>
+        <div class="photo-slot"><img src="https://picsum.photos/id/151/400/650"><div class="overlay"><span>15</span><h3>Velvet Sky</h3></div></div>
+        <div class="photo-slot"><img src="https://picsum.photos/id/161/400/400"><div class="overlay"><span>16</span><h3>Reflections</h3></div></div>
+        <div class="photo-slot"><img src="IMG_0719.JPG"><div class="overlay"><span>17</span><h3>The Observer</h3></div></div>
+        <div class="photo-slot"><img src="https://picsum.photos/id/181/400/300"><div class="overlay"><span>18</span><h3>Static Motion</h3></div></div>
+        <div class="photo-slot"><img src="IMG_0721.JPG"><div class="overlay"><span>19</span><h3>Faded Memory</h3></div></div>
+        <div class="photo-slot"><img src="https://picsum.photos/id/201/400/450"><div class="overlay"><span>20</span><h3>End Credits</h3></div></div>
+    </div>
+
+    <script>
+        // Intersection Observer for the "Fade-In" effect as you scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.photo-slot').forEach(slot => observer.observe(slot));
+    </script>
+</body>
+</html>
